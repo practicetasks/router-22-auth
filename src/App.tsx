@@ -9,10 +9,10 @@
 // import TasksLayout from "./pages/TasksLayout.tsx";
 // import {UsersListPage} from "./pages/UsersListPage.tsx";
 import {useEffect, useState} from "react";
-import {getMe, register, type RegisterRequest, type TokenResponse} from "./api.ts";
+import {getMe, login, type LoginRequest,type TokenResponse} from "./api.ts";
 
 function App() {
-    const [formState, setFormState] = useState<RegisterRequest>({email: '', name: '', password: ''});
+    const [formState, setFormState] = useState<LoginRequest>({email: '', password: ''});
 
     const [response, setResponse] = useState<TokenResponse | null>(null);
 
@@ -21,7 +21,11 @@ function App() {
         if (!accessToken) return
 
         getMe(accessToken)
-            .then(data => setResponse(data));
+            .then(data => {
+                if (data.success) {
+                    setResponse(data);
+                }
+            });
     }, []);
 
     if (response?.user) {
@@ -34,10 +38,12 @@ function App() {
     function handleSubmit(e: React.SubmitEvent) {
         e.preventDefault();
 
-        register(formState).then(data => {
-            setResponse(data);
-            localStorage.setItem('accessToken', data.accessToken);
-            localStorage.setItem('refreshToken', data.refreshToken);
+        login(formState).then(data => {
+            if (data.success) {
+                setResponse(data);
+                localStorage.setItem('accessToken', data.accessToken!);
+                localStorage.setItem('refreshToken', data.refreshToken!);
+            }
         });
     }
 
@@ -45,11 +51,9 @@ function App() {
         <div>
             <form onSubmit={handleSubmit}>
 
-                <h3>Регистрация</h3>
+                <h3>Логин</h3>
                 <input placeholder={'Введите email'}
                        onChange={e => setFormState({...formState, email: e.target.value})}/>
-
-                <input placeholder={'Введите name'} onChange={e => setFormState({...formState, name: e.target.value})}/>
 
                 <input placeholder={'Введите password'}
                        onChange={e => setFormState({...formState, password: e.target.value})}/>
