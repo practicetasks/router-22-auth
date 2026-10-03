@@ -9,7 +9,9 @@
 // import TasksLayout from "./pages/TasksLayout.tsx";
 // import {UsersListPage} from "./pages/UsersListPage.tsx";
 import {useEffect, useState} from "react";
-import {getMe, login, type LoginRequest,type TokenResponse} from "./api.ts";
+import {getMe, login, type LoginRequest, type TokenResponse} from "./api.ts";
+import {Route, Routes} from "react-router-dom";
+import TasksListPage from "./pages/TasksListPage.tsx";
 
 function App() {
     const [formState, setFormState] = useState<LoginRequest>({email: '', password: ''});
@@ -48,55 +50,54 @@ function App() {
     }
 
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
+        <>
+            {/*<div>*/}
+            {/*    <form onSubmit={handleSubmit}>*/}
 
-                <h3>Логин</h3>
-                <input placeholder={'Введите email'}
-                       onChange={e => setFormState({...formState, email: e.target.value})}/>
+            {/*        <h3>Логин</h3>*/}
+            {/*        <input placeholder={'Введите email'}*/}
+            {/*               onChange={e => setFormState({...formState, email: e.target.value})}/>*/}
 
-                <input placeholder={'Введите password'}
-                       onChange={e => setFormState({...formState, password: e.target.value})}/>
+            {/*        <input placeholder={'Введите password'}*/}
+            {/*               onChange={e => setFormState({...formState, password: e.target.value})}/>*/}
 
-                <button>Подтвердить</button>
-            </form>
-        </div>
+            {/*        <button>Подтвердить</button>*/}
+            {/*    </form>*/}
+            {/*</div>*/}
+            <Routes>
+                <Route path="/tasks"  element={<TasksListPage/>}/>
+            </Routes>
+        </>
     )
 
 
-            {/*<div>*/}
-            {/*    <h1>App</h1>*/}
-            {/*    <nav style={{display: 'flex', gap: '20px', justifyContent: 'center'}}>*/}
-            {/*        <Link to={"/"}>Главная</Link>*/}
-            {/*        <Link to={"/login"}>Вход</Link>*/}
-            {/*        <Link to={"/register"}>Регистрация</Link>*/}
-            {/*        <Link to={"/users"}>Список пользователей</Link>*/}
-            {/*    </nav>*/}
-            {/*</div>*/}
-
-            {/*<Routes>*/}
-            {/*    <Route path="/" element={<MainPage/>}/>*/}
-            {/*    <Route path="/login" element={<LoginPage/>}/>*/}
-            {/*    <Route path="/register" element={<RegisterPage/> }/>*/}
-
-            {/*    <Route path="/users" element={<UsersListPage/> }/>*/}
-            {/*    <Route path="/users/:id" element={<UserSinglePage/> }/>*/}
-
-            {/*    /!*<Route path="/tasks" element={<TasksListPage/>}/>*!/*/}
-            {/*    /!*<Route path="/tasks/recent" element={<RecentTasksPage/>}/>*!/*/}
-
-            {/*    <Route path={"/tasks"} element={<TasksLayout/>}>*/}
-            {/*        <Route index element={<TasksListPage/> }/>*/}
-            {/*        <Route path="recent" element={<RecentTasksPage/>}/>*/}
-            {/*    </Route>*/}
+    {/*<div>*/
+    }
+    {/*    <h1>App</h1>*/
+    }
+    {/*    <nav style={{display: 'flex', gap: '20px', justifyContent: 'center'}}>*/
+    }
+    {/*        <Link to={"/"}>Главная</Link>*/
+    }
+    {/*        <Link to={"/login"}>Вход</Link>*/
+    }
+    {/*        <Link to={"/register"}>Регистрация</Link>*/
+    }
+    {/*        <Link to={"/users"}>Список пользователей</Link>*/
+    }
+    {/*    </nav>*/
+    }
+    {/*</div>*/
+    }
 
 
-            {/*    <Route path="*" element={<NotFoundPage/> }/>*/}
-            {/*</Routes>*/}
 
-            {/*<footer style={{background: 'blue'}}>*/}
-            {/*    Подвал*/}
-            {/*</footer>*/}
+    {/*<footer style={{background: 'blue'}}>*/
+    }
+    {/*    Подвал*/
+    }
+    {/*</footer>*/
+    }
 }
 
 export default App

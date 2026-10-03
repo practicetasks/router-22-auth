@@ -1,52 +1,38 @@
 import {taskPriorities, tasks, taskStatuses} from "../data/tasks.ts";
 import {useSearchParams} from 'react-router-dom';
-import * as React from "react";
+import {useDebounce} from "../hooks/useDebounce.tsx";
+import {useEffect, useState} from "react";
 
 export default function TasksListPage() {
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const status = searchParams.get('status'); // NEW | IN_PROGRESS | DONE | TESTING | null
-    const priority = searchParams.get('priority'); // LOW | NORMAL | HIGH | null
+    const query = searchParams.get('query');
+
+    const [inputQuery, setInputQuery] = useState(query ?? '');
+
+    const debounceQuery = useDebounce(inputQuery, 1000);
+
+    useEffect(() => {
+        setSearchParams(prev => {
+            if (debounceQuery) {
+                prev.set("query", debounceQuery)
+            } else {
+                prev.delete("query")
+            }
+
+            return prev
+        })
+    }, [debounceQuery, setSearchParams]);
 
     const filteredTasks = tasks
-        .filter(task => !status || task.status === status)
-        .filter(task => !priority || task.priority === priority)
+        .filter(task => !query || task.title.toLowerCase().includes(query.toLowerCase()))
 
-
-    function handleChange(e: React.ChangeEvent<HTMLSelectElement>, param: string)  {
-        const value = e.target.value;
-
-        // value = ''
-        // param = 'status'
-
-        // prev = {status: 'NEW', priority: 'HIGH'}
-        setSearchParams(prev => {
-            if (e.target.value) {
-                prev.set(param, value) // {status: 'NEW', priority: 'HIGH'} -> {status: 'DONE', priority: 'HIGH'}
-            } else {
-                prev.delete(param) // {status: 'NEW', priority: 'HIGH'} -> {priority: 'HIGH'}
-            }
-            return prev;
-        })
-    }
 
     return (
         <div>
             Страница с задачами
 
-            <select value={status ?? ""} onChange={e => handleChange(e, 'status')}>
-                <option value="">All</option>
-                {taskStatuses.map(taskStatus => (
-                    <option value={taskStatus}>{taskStatus}</option>
-                ))}
-            </select>
-
-            <select value={priority ?? ""} onChange={e => handleChange(e, 'priority')}>
-                <option value="">All</option>
-                {taskPriorities.map(taskPriority => (
-                    <option value={taskPriority}>{taskPriority}</option>
-                ))}
-            </select>
+            <input onChange={e => setInputQuery(e.target.value)}/>
 
             <table>
                 <thead>
